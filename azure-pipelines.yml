@@ -27,6 +27,7 @@ stages:
               EOF
             displayName: 'Configure Databricks CLI'
 
-          - script: |
-              databricks workspace import_dir notebooks /Shared/notebooks --overwrite
-            displayName: 'Upload Notebooks to Databricks'
+         - script: |
+    databricks workspace import_dir "$(Build.SourcesDirectory)/notebooks" /Shared/notebooks --overwrite
+  displayName: 'Upload Notebooks to Databricks'
+
