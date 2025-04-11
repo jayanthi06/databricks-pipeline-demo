@@ -1,14 +1,14 @@
 trigger:
   paths:
     include:
-      - notebooks/*
+      - sample_notebook.py
 
 variables:
   - group: DatabricksSecrets
 
 stages:
   - stage: DeployToDatabricks
-    displayName: Deploy Notebooks to Databricks
+    displayName: Deploy Notebook to Databricks
     jobs:
       - job: Deploy
         displayName: Upload to Workspace
@@ -31,5 +31,5 @@ stages:
             displayName: 'Configure Databricks CLI (manual path)'
 
           - script: |
-              databricks workspace import_dir "$(Build.SourcesDirectory)/notebooks" /Shared/notebooks --overwrite
-            displayName: 'Upload Notebooks to Databricks'
+              databricks workspace import /home/vsts/work/1/s/sample_notebook.py /Shared/sample_notebook --language PYTHON --format SOURCE --overwrite
+            displayName: 'Upload Notebook to Databricks'
