@@ -25,11 +25,15 @@ stages:
             displayName: 'Install databricks-cli'
 
           - script: |
-              mkdir -p /home/vsts/.databricks
-              echo -e "[DEFAULT]\nhost = $(DATABRICKS_HOST)\ntoken = $(DATABRICKS_TOKEN)" > /home/vsts/.databricks/config
-              export DATABRICKS_CONFIG_FILE=/home/vsts/.databricks/config
-            displayName: 'Configure Databricks CLI (manual path)'
+              echo -e "[DEFAULT]\nhost = $(DATABRICKS_HOST)\ntoken = $(DATABRICKS_TOKEN)" > ~/.databricks.cfg
+              export DATABRICKS_CONFIG_FILE=~/.databricks.cfg
 
-          - script: |
-              databricks workspace import /home/vsts/work/1/s/sample_notebook.py /Shared/sample_notebook --language PYTHON --format SOURCE --overwrite
-            displayName: 'Upload Notebook to Databricks'
+              echo "✅ CLI configured. Now uploading notebook..."
+
+              databricks workspace import \
+                "$(Build.SourcesDirectory)/sample_notebook.py" \
+                /Shared/sample_notebook \
+                --language PYTHON \
+                --format SOURCE \
+                --overwrite
+            displayName: 'Configure CLI & Upload Notebook'
