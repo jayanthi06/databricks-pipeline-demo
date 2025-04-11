@@ -25,9 +25,10 @@ stages:
             displayName: 'Install databricks-cli'
 
           - script: |
-              mkdir -p ~/.databricks
-              echo -e "[DEFAULT]\nhost = $(DATABRICKS_HOST)\ntoken = $(DATABRICKS_TOKEN)" > ~/.databricks/config
-            displayName: 'Configure Databricks CLI'
+              mkdir -p /home/vsts/.databricks
+              echo -e "[DEFAULT]\nhost = $(DATABRICKS_HOST)\ntoken = $(DATABRICKS_TOKEN)" > /home/vsts/.databricks/config
+              export DATABRICKS_CONFIG_FILE=/home/vsts/.databricks/config
+            displayName: 'Configure Databricks CLI (manual path)'
 
           - script: |
               databricks workspace import_dir "$(Build.SourcesDirectory)/notebooks" /Shared/notebooks --overwrite
