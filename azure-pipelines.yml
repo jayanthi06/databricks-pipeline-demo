@@ -11,6 +11,10 @@ stages:
     displayName: Deploy Notebooks to Databricks
     jobs:
       - job: Deploy
+        displayName: Upload to Workspace
+        pool:
+          vmImage: 'ubuntu-latest'
+
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -21,13 +25,10 @@ stages:
             displayName: 'Install databricks-cli'
 
           - script: |
-              databricks configure --token <<EOF
-              $(DATABRICKS_HOST)
-              $(DATABRICKS_TOKEN)
-              EOF
+              mkdir -p ~/.databricks
+              echo -e "[DEFAULT]\nhost = $(DATABRICKS_HOST)\ntoken = $(DATABRICKS_TOKEN)" > ~/.databricks/config
             displayName: 'Configure Databricks CLI'
 
-         - script: |
-    databricks workspace import_dir "$(Build.SourcesDirectory)/notebooks" /Shared/notebooks --overwrite
-  displayName: 'Upload Notebooks to Databricks'
-
+          - script: |
+              databricks workspace import_dir "$(Build.SourcesDirectory)/notebooks" /Shared/notebooks --overwrite
+            displayName: 'Upload Notebooks to Databricks'
